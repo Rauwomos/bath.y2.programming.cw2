@@ -7,5 +7,8 @@
 
 # Note: length(?List, ?Int) is predefined
 
-list_length(0,[]).
-list_length(X,[_|L]) :-list_length(X1,L), X is X1 + 1.
+# my_length([],0).
+# my_length([_|L],N) :- my_length(L,N1), N is N1 + 1.
+
+# my_length([],0).
+# my_length([_|L],N) :- my_length(L,N1), N is N1 + 1.

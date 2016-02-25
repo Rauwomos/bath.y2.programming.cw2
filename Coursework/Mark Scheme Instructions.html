@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0051)http://www.cs.bath.ac.uk/ag/CM20214-20221/mark.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<title>CM20214-20221A—Advanced Programming Principles</title>
+<link href="./Mark Scheme Instructions_files/Site.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+<h2>CM20214-20221A—Marking CW2</h2>
+<p>This Prolog program marks <a href="http://www.cs.bath.ac.uk/ag/CM20214-20221/CM20214-21A-CW2-2016.pdf">CM20214/221A 2015/16 CW2</a>: <a href="http://www.cs.bath.ac.uk/ag/CM20214-20221/mark.pl">mark.pl</a> (current version 1.03 22/2/2016)</p>
+<p>Instructions:</p>
+<ol>
+  <li>Put the file mark.pl in the same directory as your solution Prolog program, which we suppose is called abc12.pl (where abc12 stands for your BUCS id).</li>
+  <li>Run SWI-Prolog in that directory and do:<br>
+    <br>
+    <tt>?- consult(mark).<br>
+    ?- mark('abc12.pl').</tt><br>
+    <br>
+    The result should be the grade for your solution and an explanation.</li>
+</ol>
+<p>If Prolog loops or crashes, the most likely cause is the presence of an infinite number of answers. In that case a manual grading will be performed and marks will be subtracted as specified in the coursework specification.</p>
+<p>Tip: if you want to check whether a query, say <tt>?- s2(Q,100)</tt>, admits multiple answers, just perform</p>
+<blockquote>
+  <p><tt>?- findall(Q,s2(Q,100),L), length(L,N).</tt></p>
+</blockquote>
+<p>If the answer for N is different from 1 (including Prolog looping) then there are multiple answers.</p>
+<p>This is an example run on a correct program with a  good but not spectacular efficiency in finding the solutions:</p>
+<blockquote>
+  <p><tt>?- mark('abc12.pl').<br>
+% abc12.pl compiled 0.00 sec, 56 clauses<br>
+Task 1 is solved correctly and with no multiple answers.<br>
+Task 2 is solved correctly and with no multiple answers.<br>
+Task 3 is solved correctly and with no multiple answers.<br>
+Task 4 is solved correctly and with no multiple answers.<br>
+Task 4 requires 359701 inferences.<br>
+Task 5 is solved correctly and with no multiple answers.<br>
+Task 5 requires 78818869 inferences.<br>
+The grades for tasks 1 to 5 are: 20 + 20 + 20 + 7 + 5 = 72.<br>
+*** Found built-in not(.<br>
+Because of built-ins the grade is 72 - 20 = 52.<br>
+The penalty for multiple answers is 0.<br>
+The final grade is therefore 52.<br>
+The marker will inspect the program for soundness and fairness and might    change the grade.<br>
+-id:abc12.pl-t4:359701-t5:78818869-BI:1-MG:52-<br>
+true.</tt></p>
+</blockquote>
+<p>The number of inferences might depend on the SWI-Prolog version and perhaps also on the platform, and this might justify small differences in grading. For the grading I will be using the latest SWI-Prolog version for the Mac.</p>
+<p>Please note that I reserve the right to add other built-ins to the list contained in this program. In fact, the specification tells you exactly what you can use, all the rest you can't! There simply are too many possibilities for me to list them all in this program.</p>
+<p>Further tips:</p>
+<ol>
+  <li>To run SWI-Prolog with more memory than the default, use something like<br>
+    <br>
+    <tt>swipl -G32g -L32g</tt><br>
+    <br>
+    on the command line.</li>
+  <li>Use the following to get unabbreviated answers (for lists of quadruples especially):<br>
+    <br>
+    <tt>?- set_prolog_flag(answer_write_options,[quoted(true), portray(true)]).</tt></li>
+</ol>
+<p>A final recommendation: please make sure that your program does not write anything to the display (in other words, don't use <tt>write/1</tt> and similar and take care of all the warnings, such as for singleton variables). This is so that there is no interference with the marking program's output.</p>
+<p class="Signature">22.2.2016<img src="./Mark Scheme Instructions_files/S.gif" alt=""><a href="http://alessio.guglielmi.name/">Alessio Guglielmi</a><img src="./Mark Scheme Instructions_files/S.gif" alt=""><a href="mailto:AlessioATGuglielmi.name">email</a> (replace AT by @)</p>
+
+</body></html>

@@ -1,0 +1,240 @@
+@font-face {
+	font-family: 'Optima';
+	src: url('1.woff');
+	font-weight: normal;
+	font-style: normal
+}
+@font-face {
+	font-family: 'Optima';
+	src: url('2.woff');
+	font-weight: bold;
+	font-style: normal
+}
+@font-face {
+	font-family: 'Optima';
+	src: url('3.woff');
+	font-weight: normal;
+	font-style: italic
+}
+@font-face {
+	font-family: 'Optima';
+	src: url('4.woff');
+	font-weight: bold;
+	font-style: italic
+}
+@font-face {
+	font-family: 'Gill Sans';
+	src: url('5.woff');
+	font-weight: bold;
+	font-style: normal
+}
+@font-face {
+	font-family: 'Gill Sans';
+	src: url('6.woff');
+	font-weight: bold;
+	font-style: italic
+}
+body {
+	color: #000000;
+	font-size: 100%;
+	font-family: Optima, "Lucida Sans", "Frutiger 55 Roman", Arial, Helvetica, Geneva, sans-serif;
+	background-color: white;
+	text-align: justify;
+	margin: 1em 1pc
+}
+@media screen and (max-width: 800px) {
+body {
+	color: #000000;
+	font-size: 100%;
+	font-family: Optima, "Lucida Sans", "Frutiger 55 Roman", Arial, Helvetica, Geneva, sans-serif;
+	background-color: white;
+	text-align: left;
+	margin: 1em 1pc
+}
+}
+a {
+	color: #1B82CF;
+	font-weight: bold;
+	text-decoration: none
+}
+a:visited {
+	color: #0067B4
+}
+a:hover {
+	color: #3BA2EF; /* #00c82a */
+	font-weight: bold;
+	text-decoration: none
+}
+strong {
+	color: #20AE51; /* 005560 */
+	font-family: Gill Sans, Arial, "Trebuchet MS", Verdana, Futura, "Myriad Web Bold", "Myriad Pro Bold It", "Stone Sans ITC TT-Bold", sans-serif;
+	font-weight: bold
+}
+b {
+	color: #FF0000;
+	font-weight: bold
+}
+div.center {
+	margin-left: auto;
+	margin-right: auto;
+	width: 70%
+}
+em {
+	color: #20AE51;
+	font-style: italic;
+	font-weight: bold
+}
+h2 {
+	color: #20AE51;
+	font-size: 180%;
+	font-family: Gill Sans, Arial, "Trebuchet MS", Verdana, Futura, "Myriad Web Bold", "Myriad Pro Bold It", "Stone Sans ITC TT-Bold", sans-serif;
+	font-weight: bold;
+	text-align: center;
+	margin-top: 1em;
+	margin-bottom: 2.5em
+}
+h3 {
+	color: #20AE51;
+	font-size: 140%;
+	font-family: Gill Sans, Arial, "Trebuchet MS", Verdana, Futura, "Myriad Web Bold", "Myriad Pro Bold It", "Stone Sans ITC TT-Bold", sans-serif;
+	font-style: italic;
+	font-weight: bold;
+	text-align: left;
+	margin-top: 3em;
+	margin-bottom: 1em
+}
+h4 {
+	color: #20AE51;
+	font-size: 120%;
+	font-family: Gill Sans, Arial, "Trebuchet MS", Verdana, Futura, "Myriad Web Bold", "Myriad Pro Bold It", "Stone Sans ITC TT-Bold", sans-serif;
+	font-style: italic;
+	font-weight: bold;
+	text-align: left;
+	margin-top: 2.5em;
+	margin-bottom: 1em
+}
+ol {
+	list-style-type: decimal;
+	margin-top: 1em;
+	margin-right: 2pc;
+	margin-bottom: 1em
+}
+ol ol {
+	font-size: 90%;
+	margin-top: 0;
+	margin-right: 2pc;
+	margin-bottom: 0.5em
+}
+p {
+	margin-top: 1em;
+	margin-bottom: 1em
+}
+p.center {
+	text-align: center
+}
+p.right {
+	text-align: right
+}
+table {
+	margin: 0;
+	padding: 0 0 1pc 1pc
+}
+td.right {
+	text-align: right
+}
+tr.topalign {
+	vertical-align: top
+}
+ul {
+	list-style-type: disc;
+	margin-top: 0;
+	margin-right: 2pc;
+	margin-bottom: 0.5em
+}
+.Frogs {
+	list-style-type: none
+}
+.Frogs li:before {
+	content: '';
+	display: inline-block;
+	height: 21px;
+	width: 27px;
+	background-image: url(F2ss.svg);
+	background-repeat: no-repeat;
+	margin-left: -27px;
+	margin-bottom: 0
+}
+.Indent {
+	list-style-type: none
+}
+.Nopadding {
+	padding: 0;
+	float: none
+}
+td.Tenpadding {
+	text-align: left;
+	padding: 10px;
+	float: none
+}
+.Display {
+	color: #20AE51;
+	font-family: "Andale Mono", "Lucida Sans Typewriter", "Lucida Console", "Prestige Elite", "Courier New", Courier, Monaco, monospace;
+	text-align: left;
+	margin-right: 4pc;
+	margin-left: 4pc
+}
+.DisplayIn {
+	color: #20AE51;
+	font-family: "Andale Mono", "Lucida Sans Typewriter", "Lucida Console", "Prestige Elite", "Courier New", Courier, Monaco, monospace
+}
+.WV {
+	margin-top: 3.5em;
+	margin-bottom: 0
+}
+.Signature {
+	font-size: 90%;
+	font-style: italic;
+	text-align: right;
+	margin-top: 4em;
+	margin-bottom: 0
+}
+.Smaller {
+	font-size: 90%
+}
+.SmallerOl {
+	font-size: 90%;
+	margin-top: 0;
+	margin-right: 2pc;
+	margin-bottom: 0.5em
+}
+.MuchSmaller {
+	font-size: 40%
+}
+.RightPicture {
+	float: right;
+	padding-left: 1pc
+}
+.Red {
+	color: red
+}
+.ThreeCol {
+	-webkit-column-count: 3;
+	-moz-column-count: 3;
+	column-count: 3;
+	text-align: left;
+}
+@media screen and (max-width: 640px) {
+.ThreeCol {
+	-webkit-column-count: 2;
+	-moz-column-count: 2;
+	column-count: 2;
+	text-align: left;
+}
+}
+.nomargintop {
+	margin-top: 0px;
+	margin-bottom: 0px
+}
+.IndentThree {
+	list-style-type: disc
+}
