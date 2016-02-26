@@ -1,0 +1,2 @@
+As S knew that P didn't know it, remove all quadruples where the sum could have been made by a product which P would know what the answer is
+Sort by S
