@@ -44,6 +44,6 @@ list_count(X,L,N) :- M is N - 1, list_count(X,[N|L],M).
 %%  M is second term, decreases every step from R-N to 
 %%  R is the original value (ie 100 or 500)
 %% dd_list
-dd_list(X, X, 3 , 2).
-dd_list(X,L,N,2) :- dd_list(X,[[N,2]|L],N-1,N-2).
-dd_list(X,L, N, M) :- dd_list(X,[[N,M]|L],N,M-1).
+dd_list([[3,2,5,6]|X], X, 3, 2).
+dd_list(X,L,N,2) :- O is N-1, M is O-1, S is N+2, P is N*2, dd_list(X,[[N,2,S,P]|L],O,M).
+dd_list(X,L, N, M) :- O is M-1, S is N+M, P is N*M, dd_list(X,[[N,M,S,P]|L],N,O).
