@@ -1,5 +1,5 @@
 Task 1 is solved correctly and with no multiple answers.
-Task 2 is not solved because predicate s2/2 does not exist.
+Task 2 is not solved correctly but there are no multiple answers.
 Task 3 is not solved because predicate s3/2 does not exist.
 Task 4 is not solved because predicate s4/2 does not exist.
 Task 5 is not solved because predicate s4/2 does not exist.

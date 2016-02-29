@@ -25,7 +25,7 @@ s4(Q,500) uses <number> inferences. */
 /* <BODY OF THE PROGRAM> */
 
 %% Step 1
-s1(Q,M):-Y is M-2,dd_list(Quads,[],2,Y,M),!,merge_sort(Quads,Sorted),!,remove_singleton(Sorted,[],Q),!.
+s1(Q,M):-Y is M-2,dd_list(Quads,[],2,Y,M),merge_sort(Quads,Sorted),remove_singleton(Sorted,[],Q),!.
 
 %%   Part 1
 %%     Create a list of [X, Y, X+Y, X*Y] (here on known as a quadruple)
@@ -79,15 +79,44 @@ remove_singleton([[_,_,_,P1],[X1,Y1,S1,P2],[X2,Y2,S2,P2]|L],L2,A):-!,P1\=P2, rem
 	% X Y Z
 remove_singleton([[_,_,_,P1],[_,_,_,P2],[X3,Y3,S3,P3]|L],L2,A):-!,P1\=P2, !,P1\=P3, !,P2\=P3, remove_singleton([[X3,Y3,S3,P3]|L],L2,A).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %%Step 2
 	% Remove all quadruples where the sum has at least one case where x and y are both primes for that sum
 	% TODO
-		% Make a function that generates a list of primes up to a max value
+		% 
 		% Check if x and y are in the list
+s2(A,M):-s1(Q,M),merge_sort1(Q,Sorted),remove_invalid(A,Sorted),!.
 
-remove_sum_of_primes(_,[]).
-remove_sum_of_primes(A,[[X,Y,S,P]|L]):-(isPrime2(X),isPrime2(Y)->remove_sum(Removed,_,L,S),remove_sum_of_primes(A,Removed); remove_sum(Removed,Kept,[[X,Y,S,P]|L],S),remove_sum_of_primes([Kept|A]),Removed).
+remove_invalid(Removed,Sorted):-list(L,[],53),remove_invalid2(Removed,[],Sorted,L).
 
+remove_invalid2(A,A,[],_).
+remove_invalid2(A,A,[[_,_,S,_]|_],_):-S>54.
+remove_invalid2(A,C,[[X,Y,S,P]|T],List):-is_member_sorted(S,List),!,remove_invalid2(A,[[X,Y,S,P]|C],T,List).
+remove_invalid2(A,C,[_|T],List):-remove_invalid2(A,C,T,List).
+
+remove_sum_of_primes(A,A,[]).
+remove_sum_of_primes(A,C,[[X,_,_,_]|T]):-is_sum_prime(X),!,remove_sum_of_primes(A,C,T),!.
+remove_sum_of_primes(A,C,[[_,Y,_,_]|T]):-is_sum_prime(Y),!,remove_sum_of_primes(A,C,T),!.
+remove_sum_of_primes(A,C,[[X,Y,S,P]|T]):-remove_sum_of_primes(A,[[X,Y,S,P]|C],T),!.
+
+list(A,A,10):-!.
+list(A,C,N):-is_sum_prime(N),!,M is N-1, list(A,C,M).
+list(A,C,N):-!,M is N-1, list(A,[N|C],M).
+
+is_member_sorted(M,[M|_]).
+is_member_sorted(M,[N|T]):-M>N,is_member_sorted(M,T).
+
+is_sum_prime(X):-Y is X mod 2, Y = 0,!.
+is_sum_prime(X):-Y is X - 2, is_prime(Y),!.
+
+
+%% remove_sum([A|R],[],[[1,1,3,1],[1,1,3,1],[2,2,3,2],[1,2,4,1]],3).
+	% This is an example of how you would call remove_sum.
+	% The first term will return a list of two lists, where the list with removed quads is in the head (A) and the removed terms are in the tail(D)
+	% The second term should be an empty list to start.
+	% The third term should be the list that you want to remove quads from.
+	% The fourth term is the sum that you want to remove. It should also be the quad of the next term in the list
 remove_sum([],_,[],_).
 remove_sum([[[X,Y,S,P]|L]|D],D,[[X,Y,S,P]|L],Sum):-S\=Sum,!.
 remove_sum(A,D,[[X,Y,S,P]|L],Sum):-S=Sum,remove_sum(A,[[X,Y,S,P]|D],L,Sum).
@@ -102,25 +131,16 @@ merge1(L,[],L):-L\=[].
 merge1([[X1,Y1,S1,P1]|T1],[[X2,Y2,S2,P2]|T2],[[X1,Y1,S1,P1]|T]):- S1=<S2,merge1(T1,[[X2,Y2,S2,P2]|T2],T).
 merge1([[X1,Y1,S1,P1]|T1],[[X2,Y2,S2,P2]|T2],[[X2,Y2,S2,P2]|T]):- S1>S2,merge1([[X1,Y1,S1,P1]|T1],T2,T).
 
-is_prime(2) :-
-    !.
-is_prime(3) :-
-    !.
-is_prime(X) :-
-    X > 3,
-    X mod 2 =\= 0,
-    N_max is ceiling(sqrt(X)),
-    is_prime2(X,3,N_max).
+is_prime(2):-!.
+is_prime(3):-!.
+is_prime(X):-X > 3,X mod 2 =\= 0,N_max is ceiling(sqrt(X)),is_prime2(X,3,N_max).
+is_prime2(_,N,N_max):-N > N_max,!.
+is_prime2(X,N,N_max):-0 =\= X mod N, M is N + 2, is_prime2(X,M,N_max).
 
-is_prime2(X,N,N_max) :-
-    (  N > N_max 
-    -> true
-    ;  0 =\= X mod N,
-       M is N + 2,
-       is_prime2(X,M,N_max)
-    ).
+
+%% is_cube_prime(X).
 
 %% For testing s1 and s2
-%% run(Sorted2,M):-Y is M-2,dd_list(Quads,[],2,Y,M),merge_sort(Quads,Sorted),remove_singleton(Sorted,[],Q),merge_sort1(Q,Sorted2).
-%% run2(Sorted2,M):-Y is M-2,dd_list(Q,[],2,Y,M),merge_sort(Q,Sorted),remove_singleton(Sorted,[],Q),merge_sort1(Q,Sorted2).
-run(L):-dd_list(A,[],2,98,100),merge_sort(A,Sorted),remove_singleton(Sorted,[],Q),length(Q,L).
+run(Length):-dd_list(Q,[],2,98,100),merge_sort(Q,Sorted),remove_singleton(Sorted,[],Removed),merge_sort1(Removed,Sorted2),remove_sum_of_primes(A,[],Sorted2),length(A,Length),!.
+
+run2(Length):-dd_list(Q,[],2,98,100),length(Q,Length),!.
