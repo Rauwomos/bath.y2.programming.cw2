@@ -14,3 +14,5 @@ remove_singleton2([[X1,Y1,S1,P1],[X2,Y2,S2,P1],[X3,Y3,S3,P2]|L],Ls,Aq,Ss,As):-!,
 remove_singleton2([[_,_,S1,P1],[X2,Y2,S2,P2],[X3,Y3,S3,P2]|L],Ls,Aq,Ss,As):-!,P1\=P2, remove_singleton2([[X2,Y2,S2,P2],[X3,Y3,S3,P2]|L],Ls,Aq,[S1|Ss],As).
 	% X Y Z
 remove_singleton2([[_,_,S1,P1],[_,_,S2,P2],[X3,Y3,S3,P3]|L],Ls,Aq,Ss,As):-!,P1\=P2, !,P1\=P3, !,P2\=P3, remove_singleton2([[X3,Y3,S3,P3]|L],Ls,Aq,[S2,S1|Ss],As).
+
+run

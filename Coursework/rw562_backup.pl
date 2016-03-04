@@ -38,7 +38,7 @@ s4_test(L,M):-s4(Q,M),length(Q,L).
 	%% Step 4 - Remove non-unique sums
 
 %% Step 1
-s1(A,M):-Y is M-2,dd_list(Q,[[]],2,Y,M),merge_sort(Q,[S]),remove_singleton(S,[],A),!.
+s1(Q,M):-Y is M-2,dd_list(Quads,[],2,Y,M),merge_sort(Quads,Sorted),remove_singleton(Sorted,[],Q),!.
 
 %%   Part 1 - Create a list of [X, Y, X+Y, X*Y] (here on known as a quadruple)
 %%   Part 2 - Create a function that sorts a list of quadruples by X*Y
@@ -50,59 +50,26 @@ s1(A,M):-Y is M-2,dd_list(Q,[[]],2,Y,M),merge_sort(Q,[S]),remove_singleton(S,[],
 	% X is first term, decreases from either 100-Y to 2 or Y-1 to 2 depending on wether X+Y>100 or not
 	% Y is second term, decreases by one every time X reaches 2
 	% M is the max sum(ie 100 or 500)
-%% dd_list([[2,3,5,6]|L], L, 2, 3,_).
-%% dd_list(A,L,2,Y,M) :- Z is Y-1, X is Z-1, S is Y+2, P is Y*2, dd_list(A,[[2,Y,S,P]|L],X,Z,M).
-%% dd_list(A,L,X,Y,M) :- X+Y>M, Z is M-Y, dd_list(A,L,Z,Y,M).
-%% dd_list(A,L,X,Y,M) :- Z is X-1, S is X+Y, P is X*Y, dd_list(A,[[X,Y,S,P]|L],Z,Y,M).
-
-%% %% Does a merge sort on the list of quadruples, sorting by the product
-%% merge_sort([],[]).
-%% merge_sort([X],[X]).
-%% merge_sort(List,Sorted) :- List=[_,_|_],divide(List,L1,L2), merge_sort(L1,Sorted1),merge_sort(L2,Sorted2), merge(Sorted1,Sorted2,Sorted).
-
-%% merge([],L,L).
-%% merge(L,[],L):-L\=[].
-%% merge([[X1,Y1,S1,P1]|T1],[[X2,Y2,S2,P2]|T2],[[X1,Y1,S1,P1]|T]):- P1=<P2,merge(T1,[[X2,Y2,S2,P2]|T2],T).
-%% merge([[X1,Y1,S1,P1]|T1],[[X2,Y2,S2,P2]|T2],[[X2,Y2,S2,P2]|T]):- P1>P2,merge([[X1,Y1,S1,P1]|T1],T2,T).
-
-%% divide(L,L1,L2):-halve(L,L1,L2).
-%% halve(L,A,B):-hv(L,L,A,B).  
-%% hv([],R,[],R).   % for lists of even length
-%% hv([_],R,[],R).  % for lists of odd length
-%% hv([_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_|T],[A0,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16,A17,A18,A19,A20,A21,A22,A23,A24,A25,A26,A27,A28,A29,A30,A31|L],[A0,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16,A17,A18,A19,A20,A21,A22,A23,A24,A25,A26,A27,A28,A29,A30,A31|L1],R):-hv(T,L,L1,R),!.
-%% hv([_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_|T],[A0,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15|L],[A0,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15|L1],R):-hv(T,L,L1,R),!.
-%% hv([_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_|T],[A0,A1,A2,A3,A4,A5,A6,A7|L],[A0,A1,A2,A3,A4,A5,A6,A7|L1],R):-hv(T,L,L1,R),!.
-%% hv([_,_,_,_,_,_,_,_|T],[A,B,C,D|L],[A,B,C,D|L1],R):-hv(T,L,L1,R),!.
-%% hv([_,_,_,_|T],[A,B|L],[A,B|L1],R):-hv(T,L,L1,R),!.
-%% hv([_,_|T],[X|L],[X|L1],R):-hv(T,L,L1,R),!.
-%% hv([_,_|T],[X|L],[X|L1],R):-hv(T,L,L1,R).
-
-dd_list([[[2,3,5,6]|C]|T], [C|T], 2, 3,_).
-dd_list(A,L,1,Y,M) :- Z is Y-1, X is Z-1, dd_list(A,[[]|L],X,Z,M).
+dd_list([[2,3,5,6]|L], L, 2, 3,_).
+dd_list(A,L,2,Y,M) :- Z is Y-1, X is Z-1, S is Y+2, P is Y*2, dd_list(A,[[2,Y,S,P]|L],X,Z,M).
 dd_list(A,L,X,Y,M) :- X+Y>M, Z is M-Y, dd_list(A,L,Z,Y,M).
-dd_list(A,[C|T],X,Y,M) :- Z is X-1, S is X+Y, P is X*Y, dd_list(A,[[[X,Y,S,P]|C]|T],Z,Y,M).
+dd_list(A,L,X,Y,M) :- Z is X-1, S is X+Y, P is X*Y, dd_list(A,[[X,Y,S,P]|L],Z,Y,M).
 
-dd_sort([],M,M):-!.
-dd_sort([H|T],M,A):-merge(H,M,D),!,dd_sort(T,D,A).
-
+%% Does a merge sort on the list of quadruples, sorting by the product
 merge_sort([],[]).
 merge_sort([X],[X]).
 merge_sort(List,Sorted) :- List=[_,_|_],divide(List,L1,L2), merge_sort(L1,Sorted1),merge_sort(L2,Sorted2), merge(Sorted1,Sorted2,Sorted).
 
-merge([[]],L,L).
-merge(L,[[]],L):-L\=[].
-merge([[[X1,Y1,S1,P1]|T1]],[[[X2,Y2,S2,P2]|T2]],[[[X1,Y1,S1,P1]|T]]):- P1=<P2,merge([T1],[[[X2,Y2,S2,P2]|T2]],[T]).
-merge([[[X1,Y1,S1,P1]|T1]],[[[X2,Y2,S2,P2]|T2]],[[[X2,Y2,S2,P2]|T]]):- P1>P2,merge([[[X1,Y1,S1,P1]|T1]],[T2],[T]).
+merge([],L,L).
+merge(L,[],L):-L\=[].
+merge([[X1,Y1,S1,P1]|T1],[[X2,Y2,S2,P2]|T2],[[X1,Y1,S1,P1]|T]):- P1=<P2,merge(T1,[[X2,Y2,S2,P2]|T2],T).
+merge([[X1,Y1,S1,P1]|T1],[[X2,Y2,S2,P2]|T2],[[X2,Y2,S2,P2]|T]):- P1>P2,merge([[X1,Y1,S1,P1]|T1],T2,T).
 
-divide(L,L1,L2):-hv(L,L,L1,L2).  
+divide(L,L1,L2):-halve(L,L1,L2).
+halve(L,A,B):-hv(L,L,A,B).  
 hv([],R,[],R).   % for lists of even length
 hv([_],R,[],R).  % for lists of odd length
-hv([_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_|T],[A0,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16,A17,A18,A19,A20,A21,A22,A23,A24,A25,A26,A27,A28,A29,A30,A31|L],[A0,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,A16,A17,A18,A19,A20,A21,A22,A23,A24,A25,A26,A27,A28,A29,A30,A31|L1],R):-hv(T,L,L1,R),!.
-hv([_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_|T],[A0,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15|L],[A0,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15|L1],R):-hv(T,L,L1,R),!.
-hv([_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_|T],[A0,A1,A2,A3,A4,A5,A6,A7|L],[A0,A1,A2,A3,A4,A5,A6,A7|L1],R):-hv(T,L,L1,R),!.
-hv([_,_,_,_,_,_,_,_|T],[A,B,C,D|L],[A,B,C,D|L1],R):-hv(T,L,L1,R),!.
-hv([_,_,_,_|T],[A,B|L],[A,B|L1],R):-hv(T,L,L1,R),!.
-hv([_,_|T],[X|L],[X|L1],R):-hv(T,L,L1,R),!.
+hv([_,_|T],[X|L],[X|L1],R):-hv(T,L,L1,R).
 
 %% Removes all the quadruples from the list where there is only one quadruple in the list with a quadruple's product
 remove_singleton([],L,L).
@@ -128,10 +95,7 @@ remove_singleton([[_,_,_,P1],[_,_,_,P2],[X3,Y3,S3,P3]|L],L2,A):-!,P1\=P2, !,P1\=
 	%% Part 2 - Remove these sums from the result of s1
 
 s2(A,M):-s2_1(Q,S,M),merge_sort1(Q,Qs),remove_sums(A,Qs,S).
-%% s2_1(Q,S,M):-Y is M-2,dd_list(Quads,[],2,Y,M),merge_sort(Quads,Sorted),remove_singleton1(Sorted,[],Q,[],Ss),merge_sort_rd(Ss,S),!.
-s2_1(Q,S,M):-Y is M-2,dd_list(Quads,[[]],2,Y,M),merge_sort(Quads,[Sorted]),remove_singleton1(Sorted,[],Q,[],Ss),merge_sort_rd(Ss,S),!.
-    %% s1(A,M):-Y is M-2,dd_list(Q,[[]],2,Y,M),merge_sort(Q,[S]),remove_singleton(S,[],A),!.
-
+s2_1(Q,S,M):-Y is M-2,dd_list(Quads,[],2,Y,M),merge_sort(Quads,Sorted),remove_singleton1(Sorted,[],Q,[],Ss),merge_sort_rd(Ss,S),!.
 
 %% Removes all the quadruples from the list where there is only one quadruple in the list with a quadruple's product
 remove_singleton1([],L,L,S,S).
@@ -181,25 +145,9 @@ remove_sums(A,[[X,Y,S1,P]|T1],[S2|T2]):-S1>S2,!,remove_sums(A,[[X,Y,S1,P]|T1],T2
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Does a merge sort on the list of quadruples, sorting by the product
-merge_sort2([],[]).
-merge_sort2([X],[X]).
-merge_sort2(List,Sorted) :- List=[_,_|_],divide(List,L1,L2), merge_sort2(L1,Sorted1),merge_sort2(L2,Sorted2), merge2(Sorted1,Sorted2,Sorted).
-
-merge2([],L,L).
-merge2(L,[],L):-L\=[].
-merge2([[X1,Y1,S1,P1]|T1],[[X2,Y2,S2,P2]|T2],[[X1,Y1,S1,P1]|T]):- P1=<P2,merge2(T1,[[X2,Y2,S2,P2]|T2],T).
-merge2([[X1,Y1,S1,P1]|T1],[[X2,Y2,S2,P2]|T2],[[X2,Y2,S2,P2]|T]):- P1>P2,merge2([[X1,Y1,S1,P1]|T1],T2,T).
-
-divide2(L,L1,L2):-halve2(L,L1,L2).
-halve2(L,A,B):-hv2(L,L,A,B).  
-hv2([],R,[],R).   % for lists of even length
-hv2([_],R,[],R).  % for lists of odd length
-hv2([_,_|T],[X|L],[X|L1],R):-hv2(T,L,L1,R).
-
 %%Step 3 - Remove non-unique products
 
-s3(A,M):-s2(Q,M),merge_sort2(Q,Qs),remove_singleton2(Qs,[],A),!.
+s3(A,M):-s2(Q,M),merge_sort(Q,Qs),remove_singleton2(Qs,[],A),!.
 
 %% Removes all the quadruples from the list where there is only one quadruple in the list with a quadruple's product
 remove_singleton2([],L,L).
