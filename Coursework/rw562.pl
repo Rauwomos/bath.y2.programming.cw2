@@ -24,16 +24,25 @@ s4(Q,500) uses <number> inferences. */
 
 /* <BODY OF THE PROGRAM> */
 
+%% Basic Tests
+s1_test(L,M):-s1(Q,M),length(Q,L).
+s2_test(L,M):-s2(Q,M),length(Q,L).
+s2_1_test(S,M):-s2_1(_,S,M).
+s3_test(L,M):-s3(Q,M),length(Q,L).
+s4_test(L,M):-s4(Q,M),length(Q,L).
+
+%% Steps 1 to 5
+	%% Step 1 - Remove unique products
+	%% Step 2 - Remove sums corresponding to unique products
+	%% Step 3 - Remove non-unique products
+	%% Step 4 - Remove non-unique sums
+
 %% Step 1
 s1(Q,M):-Y is M-2,dd_list(Quads,[],2,Y,M),merge_sort(Quads,Sorted),remove_singleton(Sorted,[],Q),!.
 
-%%   Part 1
-%%     Create a list of [X, Y, X+Y, X*Y] (here on known as a quadruple)
-%%      
-%%   Part 3
-%%     Create a function that sorts a list of quadruples by X*Y
-%%   Part 4
-%%     Create a function that removes all the quadruples where there is not another quadruple with the same X*Y 
+%%   Part 1 - Create a list of [X, Y, X+Y, X*Y] (here on known as a quadruple)
+%%   Part 2 - Create a function that sorts a list of quadruples by X*Y
+%%   Part 3 - Create a function that removes all the quadruples where there is not another quadruple with the same X*Y 
 
 %% Creates list of quadruples of [X,Y,S,P] where 1<X<Y and X+Y<100
 	% A is the answer
@@ -81,47 +90,42 @@ remove_singleton([[_,_,_,P1],[_,_,_,P2],[X3,Y3,S3,P3]|L],L2,A):-!,P1\=P2, !,P1\=
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%Step 2
-	% Remove all quadruples where the sum has at least one case where x and y are both primes for that sum
-	% TODO
-		% 
-		% Check if x and y are in the list
-s2(A,M):-s1(Q,M),merge_sort1(Q,Sorted),remove_invalid(A,Sorted),!.
+%%Step 2 - Remove sums corresponding to unique products
+	%% Part 1 - Create list of sums corresponding to unique products
+	%% Part 2 - Remove these sums from the result of s1
 
-remove_invalid(Removed,Sorted):-list(L,[],53),remove_invalid2(Removed,[],Sorted,L).
+s2(A,M):-s2_1(Q,S,M),merge_sort1(Q,Qs),remove_sums(A,Qs,S),!.
+s2_1(Q,S,M):-Y is M-2,dd_list(Quads,[],2,Y,M),merge_sort(Quads,Sorted),remove_singleton1(Sorted,[],Q,[],Ss),merge_sort_rd(Ss,S),!.
 
-remove_invalid2(A,A,[],_).
-remove_invalid2(A,A,[[_,_,S,_]|_],_):-S>54.
-remove_invalid2(A,C,[[X,Y,S,P]|T],List):-is_member_sorted(S,List),!,remove_invalid2(A,[[X,Y,S,P]|C],T,List).
-remove_invalid2(A,C,[_|T],List):-remove_invalid2(A,C,T,List).
-
-remove_sum_of_primes(A,A,[]).
-remove_sum_of_primes(A,C,[[X,_,_,_]|T]):-is_sum_prime(X),!,remove_sum_of_primes(A,C,T),!.
-remove_sum_of_primes(A,C,[[_,Y,_,_]|T]):-is_sum_prime(Y),!,remove_sum_of_primes(A,C,T),!.
-remove_sum_of_primes(A,C,[[X,Y,S,P]|T]):-remove_sum_of_primes(A,[[X,Y,S,P]|C],T),!.
-
-list(A,A,10):-!.
-list(A,C,N):-is_sum_prime(N),!,M is N-1, list(A,C,M).
-list(A,C,N):-!,M is N-1, list(A,[N|C],M).
-
-is_member_sorted(M,[M|_]).
-is_member_sorted(M,[N|T]):-M>N,is_member_sorted(M,T).
-
-is_sum_prime(X):-Y is X mod 2, Y = 0,!.
-is_sum_prime(X):-Y is X - 2, is_prime(Y),!.
-
-
-%% remove_sum([A|R],[],[[1,1,3,1],[1,1,3,1],[2,2,3,2],[1,2,4,1]],3).
-	% This is an example of how you would call remove_sum.
-	% The first term will return a list of two lists, where the list with removed quads is in the head (A) and the removed terms are in the tail(D)
-	% The second term should be an empty list to start.
-	% The third term should be the list that you want to remove quads from.
-	% The fourth term is the sum that you want to remove. It should also be the quad of the next term in the list
-remove_sum([],_,[],_).
-remove_sum([[[X,Y,S,P]|L]|D],D,[[X,Y,S,P]|L],Sum):-S\=Sum,!.
-remove_sum(A,D,[[X,Y,S,P]|L],Sum):-S=Sum,remove_sum(A,[[X,Y,S,P]|D],L,Sum).
+%% Removes all the quadruples from the list where there is only one quadruple in the list with a quadruple's product
+remove_singleton1([],L,L,S,S).
+	% X
+remove_singleton1([[_,_,S1,_]],Ls,Aq,Ss,As):-remove_singleton1([],Ls,Aq,[S1|Ss],As).
+	% X X
+remove_singleton1([[X1,Y1,S1,P1],[X2,Y2,S2,P1]],Ls,Aq,Ss,As):-remove_singleton1([],[[X1,Y1,S1,P1],[X2,Y2,S2,P1]|Ls],Aq,Ss,As).
+	% X Y
+remove_singleton1([[_,_,S1,P1],[_,_,S2,P2]],Ls,Aq,Ss,As):-!,P1\=P2, remove_singleton1([],Ls,Aq,[S2,S1|Ss],As).
+	% X X X
+remove_singleton1([[X1,Y1,S1,P1],[X2,Y2,S2,P1],[X3,Y3,S3,P1]|L],Ls,Aq,Ss,As):-remove_singleton1([[X2,Y2,S2,P1],[X3,Y3,S3,P1]|L],[[X1,Y1,S1,P1]|Ls],Aq,Ss,As).
+	% X X Y
+remove_singleton1([[X1,Y1,S1,P1],[X2,Y2,S2,P1],[X3,Y3,S3,P2]|L],Ls,Aq,Ss,As):-!,P1\=P2, remove_singleton1([[X3,Y3,S3,P2]|L],[[X1,Y1,S1,P1],[X2,Y2,S2,P1]|Ls],Aq,Ss,As).
+	% X Y Y
+remove_singleton1([[_,_,S1,P1],[X2,Y2,S2,P2],[X3,Y3,S3,P2]|L],Ls,Aq,Ss,As):-!,P1\=P2, remove_singleton1([[X2,Y2,S2,P2],[X3,Y3,S3,P2]|L],Ls,Aq,[S1|Ss],As).
+	% X Y Z
+remove_singleton1([[_,_,S1,P1],[_,_,S2,P2],[X3,Y3,S3,P3]|L],Ls,Aq,Ss,As):-!,P1\=P2, !,P1\=P3, !,P2\=P3, remove_singleton1([[X3,Y3,S3,P3]|L],Ls,Aq,[S2,S1|Ss],As).
 
 %% Does a merge sort on the list of quadruples, sorting by the product
+merge_sort_rd([],[]).
+merge_sort_rd([X],[X]).
+merge_sort_rd(List,Sorted) :- List=[_,_|_],divide(List,L1,L2), merge_sort_rd(L1,Sorted1),merge_sort_rd(L2,Sorted2), merge_rd(Sorted1,Sorted2,Sorted).
+
+merge_rd([],L,L).
+merge_rd(L,[],L):-L\=[].
+merge_rd([S1|T1],[S2|T2],[S1|T]):- S1<S2,merge_rd(T1,[S2|T2],T).
+merge_rd([S1|T1],[S1|T2],[S1|T]):- merge_rd(T1,T2,T).
+merge_rd([S1|T1],[S2|T2],[S2|T]):- S1>S2,merge_rd([S1|T1],T2,T).
+
+%% Does a merge sort on the list of quadruples, sorting by the sum
 merge_sort1([],[]).
 merge_sort1([X],[X]).
 merge_sort1(List,Sorted) :- List=[_,_|_],divide(List,L1,L2), merge_sort1(L1,Sorted1),merge_sort1(L2,Sorted2), merge1(Sorted1,Sorted2,Sorted).
@@ -131,16 +135,52 @@ merge1(L,[],L):-L\=[].
 merge1([[X1,Y1,S1,P1]|T1],[[X2,Y2,S2,P2]|T2],[[X1,Y1,S1,P1]|T]):- S1=<S2,merge1(T1,[[X2,Y2,S2,P2]|T2],T).
 merge1([[X1,Y1,S1,P1]|T1],[[X2,Y2,S2,P2]|T2],[[X2,Y2,S2,P2]|T]):- S1>S2,merge1([[X1,Y1,S1,P1]|T1],T2,T).
 
-is_prime(2):-!.
-is_prime(3):-!.
-is_prime(X):-X > 3,X mod 2 =\= 0,N_max is ceiling(sqrt(X)),is_prime2(X,3,N_max).
-is_prime2(_,N,N_max):-N > N_max,!.
-is_prime2(X,N,N_max):-0 =\= X mod N, M is N + 2, is_prime2(X,M,N_max).
+%% remove_sums(A,L,Ss).
+remove_sums(L,L,[]).
+remove_sums([],[],_).
+remove_sums([[X,Y,S1,P]|A],[[X,Y,S1,P]|T1],[S2|T2]):-S1<S2,!,remove_sums(A,T1,[S2|T2]).
+remove_sums(A,[[_,_,S1,_]|T1],[S2|T2]):-S1=S2,!,remove_sums(A,T1,[S2|T2]).
+remove_sums(A,[[X,Y,S1,P]|T1],[S2|T2]):-S1>S2,!,remove_sums(A,[[X,Y,S1,P]|T1],T2).
 
 
-%% is_cube_prime(X).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% For testing s1 and s2
-run(Length):-dd_list(Q,[],2,98,100),merge_sort(Q,Sorted),remove_singleton(Sorted,[],Removed),merge_sort1(Removed,Sorted2),remove_sum_of_primes(A,[],Sorted2),length(A,Length),!.
+%%Step 3 - Remove non-unique products
 
-run2(Length):-dd_list(Q,[],2,98,100),length(Q,Length),!.
+s3(A,M):-s2(Q,M),merge_sort(Q,Qs),remove_singleton2(Qs,[],A),!.
+
+%% Removes all the quadruples from the list where there is only one quadruple in the list with a quadruple's product
+remove_singleton2([],L,L).
+	% X
+remove_singleton2([[X1,Y1,S1,P1]],L2,A):-remove_singleton2([],[[X1,Y1,S1,P1]|L2],A).
+	% X X
+remove_singleton2([[_,_,_,P1],[_,_,_,P1]],L2,A):-remove_singleton2([],L2,A).
+	% X Y
+remove_singleton2([[X1,Y1,S1,P1],[X2,Y2,S2,P2]],L2,A):-!,P1\=P2, remove_singleton2([],[[X1,Y1,S1,P1],[X2,Y2,S2,P2]|L2],A).
+	% X X X
+remove_singleton2([[_,_,_,P1],[X2,Y2,S2,P1],[X3,Y3,S3,P1]|L],L2,A):-remove_singleton2([[X2,Y2,S2,P1],[X3,Y3,S3,P1]|L],L2,A).
+	% X X Y
+remove_singleton2([[_,_,_,P1],[_,_,_,P1],[X3,Y3,S3,P2]|L],L2,A):-!,P1\=P2, remove_singleton2([[X3,Y3,S3,P2]|L],L2,A).
+	% X Y Y
+remove_singleton2([[X1,Y1,S1,P1],[X2,Y2,S2,P2],[X3,Y3,S3,P3]|L],L2,A):-!,P1\=P2, remove_singleton2([[X2,Y2,S2,P2],[X3,Y3,S3,P3]|L],[[X1,Y1,S1,P1]|L2],A).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%Step 4 - Remove non-unique sums
+
+s4(A,M):-s3(Q,M),merge_sort1(Q,Qs),remove_singleton3(Qs,[],A),!.
+
+%% Removes all the quadruples from the list where there is only one quadruple in the list with a quadruple's product
+remove_singleton3([],L,L).
+	% X
+remove_singleton3([[X1,Y1,S1,P1]],L2,A):-remove_singleton3([],[[X1,Y1,S1,P1]|L2],A).
+	% X X
+remove_singleton3([[_,_,S1,_],[_,_,S1,_]],L2,A):-remove_singleton3([],L2,A).
+	% X Y
+remove_singleton3([[X1,Y1,S1,P1],[X2,Y2,S2,P2]],L2,A):-!,S1\=S2, remove_singleton3([],[[X1,Y1,S1,P1],[X2,Y2,S2,P2]|L2],A).
+	% X X X
+remove_singleton3([[_,_,S1,_],[X2,Y2,S1,P2],[X3,Y3,S1,P3]|L],L2,A):-remove_singleton3([[X2,Y2,S1,P2],[X3,Y3,S1,P3]|L],L2,A).
+	% X X Y
+remove_singleton3([[_,_,S1,_],[_,_,S1,_],[X3,Y3,S3,P3]|L],L2,A):-!,S1\=S3, remove_singleton3([[X3,Y3,S3,P3]|L],L2,A).
+	% X Y Y
+remove_singleton3([[X1,Y1,S1,P1],[X2,Y2,S2,P2],[X3,Y3,S3,P3]|L],L2,A):-!,S1\=S2, remove_singleton3([[X2,Y2,S2,P2],[X3,Y3,S3,P3]|L],[[X1,Y1,S1,P1]|L2],A).

@@ -27,4 +27,13 @@ list(A,C,N):-!,M is N-1, list(A,[N|C],M).
 is_member_sorted(M,[M|_]).
 is_member_sorted(M,[N|T]):-M>N,is_member_sorted(M,T).
 
+s2(A,M):-s1(Q,M),merge_sort1(Q,Sorted),remove_invalid(Removed,Sorted).
+
+remove_invalid(Removed,Sorted):-list(L,[],53),remove_invalid2(Removed,[],Sorted,L).
+
+remove_invalid2(A,A,[],List).
+remove_invalid2(A,A,[_,_,S,_|_],List):-S>54.
+remove_invalid2(A,C,[X,Y,S,P|T],List):-is_member_sorted(S,List),!,remove_invalid2(A,[[X,Y,S,P]|C],T,List).
+remove_invalid2(A,C,[_|T],List):-remove_invalid2(A,C,T,List).
+
 run(T):-list(L,[],53),!,is_member_sorted(T,L),!.
