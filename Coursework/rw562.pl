@@ -211,6 +211,3 @@ remove_singleton3([[_,_,S1,_],[X2,Y2,S1,P2],[X3,Y3,S1,P3]|L],L2,A) :- !, remove_
 remove_singleton3([[_,_,S1,_],[_,_,S1,_],[X3,Y3,S3,P3]|L],L2,A) :- !, remove_singleton3([[X3,Y3,S3,P3]|L],L2,A).
 	% X Y Z
 remove_singleton3([[X1,Y1,S1,P1],[X2,Y2,S2,P2],[X3,Y3,S3,P3]|L],L2,A) :- !, remove_singleton3([[X2,Y2,S2,P2],[X3,Y3,S3,P3]|L],[[X1,Y1,S1,P1]|L2],A).
-
-%% 172,960 -- > 96,316
-%% 6,124,206 -- > 3,405,259
